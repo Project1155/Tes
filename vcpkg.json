@@ -1,0 +1,11 @@
+{
+  "name": "darkflix",
+  "version": "5.0.21",
+  "dependencies": [
+    "openssl",
+    "curl",
+    "nlohmann-json",
+    "microsoft-webview2",
+    "wil"
+  ]
+}

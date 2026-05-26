@@ -1,0 +1,17 @@
+{
+  "shellVersion": "5.0.21",
+  "files": {
+    "windows-x64": {
+      "url": "https://github.com/Project1155/DarkFlix/releases/download/v5.0.21/DarkFlix-5.0.21-x64.exe",
+      "checksum": ""
+    },
+    "windows-x86": {
+      "url": "https://github.com/Project1155/DarkFlix/releases/download/v5.0.21/DarkFlix-5.0.21-x86.exe",
+      "checksum": ""
+    },
+    "server.js": {
+      "url": "https://dl.strem.io/server/v4.20.15/desktop/server.js",
+      "checksum": "fcc4c5e620effda04c9e1d29a76aa087ec86fd08a747cdcbdccc5bb8f0ec4818"
+    }
+  }
+}

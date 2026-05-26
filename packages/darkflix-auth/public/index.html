@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DarkFlix — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0d0500;--surf:#1a0c04;--bord:#3a1800;--or:#ff6a00;--or2:#ff9933;--or3:#ffbb66;--mut:#8a5030;--text:#f5dfc0;--err:#ff5555;--ok:#44cc88}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow:hidden}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(255,80,0,.13) 0%,transparent 70%),radial-gradient(ellipse 60% 80% at 80% 20%,rgba(255,140,0,.09) 0%,transparent 70%),#0d0500}
+.wrap{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{background:var(--surf);border:1px solid var(--bord);border-radius:20px;width:100%;max-width:400px;padding:44px 36px 40px;box-shadow:0 0 0 1px rgba(255,106,0,.06),0 24px 64px rgba(0,0,0,.85),0 0 80px rgba(255,80,0,.09);animation:up .4s cubic-bezier(.22,1,.36,1) both}
+@keyframes up{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+.logo{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:40px}
+.icon{width:68px;height:68px;background:linear-gradient(135deg,var(--or),#e55000);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(255,106,0,.45);position:relative;overflow:hidden}
+.icon::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,transparent 60%)}
+.icon svg{width:34px;height:34px;position:relative}
+.title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;line-height:1}
+.sub{font-size:11px;color:var(--mut);letter-spacing:2px;text-transform:uppercase}
+.alert{padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:20px;display:none;line-height:1.5}
+.alert.show{display:block}
+.alert.error{background:rgba(255,85,85,.1);border:1px solid rgba(255,85,85,.28);color:#ff8888}
+.alert.info{background:rgba(68,204,136,.1);border:1px solid rgba(68,204,136,.28);color:#88ffcc}
+.btn-google{width:100%;padding:14px;border:1px solid var(--bord);border-radius:12px;background:rgba(255,255,255,.05);color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;letter-spacing:.3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .2s;position:relative;overflow:hidden}
+.btn-google::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,106,0,.08),transparent);opacity:0;transition:opacity .2s}
+.btn-google:hover:not(:disabled)::before{opacity:1}
+.btn-google:hover:not(:disabled){border-color:rgba(255,106,0,.5);box-shadow:0 4px 20px rgba(255,106,0,.18);transform:translateY(-1px)}
+.btn-google:active:not(:disabled){transform:none}
+.btn-google:disabled{opacity:.45;cursor:not-allowed}
+.btn-google svg{width:20px;height:20px;flex-shrink:0}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.25);border-top-color:rgba(255,150,50,.9);border-radius:50%;animation:spin .65s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.divider{display:flex;align-items:center;gap:12px;margin:28px 0 0;color:var(--mut);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--bord)}
+.note{font-size:12px;color:var(--mut);text-align:center;margin-top:28px;line-height:1.7}
+.note a{color:var(--or2);text-decoration:none}
+.note a:hover{text-decoration:underline}
+/* Welcome screen */
+#welcome{display:none;text-align:center}
+#welcome.show{display:block;animation:up .35s ease both}
+.av{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--or),#e55000);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Bebas Neue',sans-serif;font-size:34px;overflow:hidden;box-shadow:0 8px 32px rgba(255,106,0,.45)}
+.av img{width:100%;height:100%;object-fit:cover}
+.wname{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;margin-bottom:6px}
+.wsub{font-size:13px;color:var(--mut);margin-bottom:28px}
+.pbar-wrap{height:4px;background:var(--bord);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.pbar{height:100%;background:linear-gradient(90deg,var(--or),var(--or2));border-radius:2px;width:0%;transition:width 2.5s ease}
+.plabel{font-size:12px;color:var(--mut);text-align:left}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+<div class="card">
+
+  <!-- Logo -->
+  <div class="logo">
+    <div class="icon">
+      <svg viewBox="0 0 34 34" fill="none">
+        <circle cx="17" cy="17" r="15" stroke="rgba(255,255,255,.75)" stroke-width="2.5"/>
+        <polygon points="14,10 26,17 14,24" fill="white"/>
+      </svg>
+    </div>
+    <div class="title">DARKFLIX</div>
+    <div class="sub">Freedom to Stream</div>
+  </div>
+
+  <!-- Alert -->
+  <div class="alert" id="alert"></div>
+
+  <!-- Sign-in panel -->
+  <div id="signinPanel">
+    <button class="btn-google" id="btnGoogle" onclick="signInGoogle()">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continue with Google
+    </button>
+
+    <div class="divider">secure sign-in</div>
+
+    <div class="note">
+      By continuing you agree to DarkFlix's terms.<br/>
+      Your Google account keeps your session secure.<br/>
+      <span id="setupNote" style="display:none">
+        ⚠️ Google OAuth not configured.
+        <a href="#" onclick="showSetup()">Setup guide</a>
+      </span>
+    </div>
+  </div>
+
+  <!-- Welcome / progress -->
+  <div id="welcome">
+    <div class="av" id="avEl"></div>
+    <div class="wname" id="wName"></div>
+    <div class="wsub">Launching DarkFlix…</div>
+    <div class="pbar-wrap"><div class="pbar" id="pBar"></div></div>
+    <div class="plabel" id="pLabel">Authenticating…</div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const API = 'http://127.0.0.1:11471/api';
+
+// ── On load ────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  // Already authenticated?
+  try {
+    const r = await fetch(`${API}/auth/status`, { credentials: 'include' });
+    const d = await r.json();
+    if (d.authenticated) { launchDarkFlix(d); return; }
+  } catch {}
+
+  // Google configured?
+  try {
+    const r = await fetch(`${API}/google/config`);
+    const d = await r.json();
+    if (!d.configured) {
+      document.getElementById('btnGoogle').disabled = true;
+      document.getElementById('setupNote').style.display = 'inline';
+    }
+  } catch {}
+
+  // Google OAuth success redirect
+  if (location.search.includes('google_success')) {
+    history.replaceState({}, '', '/');
+    try {
+      const r = await fetch(`${API}/auth/me`, { credentials: 'include' });
+      const d = await r.json();
+      if (d.ok) { launchDarkFlix(d.user); return; }
+    } catch {}
+  }
+
+  // Error from OAuth
+  const err = new URLSearchParams(location.search).get('error');
+  if (err) {
+    history.replaceState({}, '', '/');
+    const msgs = {
+      access_denied:   'Sign-in was cancelled.',
+      session_expired: 'Session expired. Please try again.',
+      google_auth_failed: 'Google sign-in failed. Please try again.',
+      cancelled:       'Sign-in was cancelled.',
+    };
+    showAlert(msgs[err] || 'Sign-in error. Please try again.', 'error');
+  }
+});
+
+function signInGoogle() {
+  const btn = document.getElementById('btnGoogle');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  window.location.href = `${API}/google/start`;
+}
+
+function showAlert(msg, type = 'error') {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className = `alert show ${type}`;
+}
+
+function showSetup() {
+  showAlert('Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET env vars, then restart DarkFlix.', 'info');
+}
+
+async function launchDarkFlix(user) {
+  document.getElementById('signinPanel').style.display = 'none';
+  const w = document.getElementById('welcome');
+  w.classList.add('show');
+
+  // Avatar
+  const av = document.getElementById('avEl');
+  if (user.avatar) {
+    av.innerHTML = `<img src="${user.avatar}" alt="" onerror="this.remove()"/>`;
+  } else {
+    av.textContent = (user.displayName || '?')[0].toUpperCase();
+  }
+  document.getElementById('wName').textContent = `Hi, ${user.displayName || user.email}!`;
+
+  const bar = document.getElementById('pBar');
+  const lbl = document.getElementById('pLabel');
+
+  bar.style.width = '40%';
+  lbl.textContent = '🔐 Verified…';
+  await sleep(500);
+
+  bar.style.width = '80%';
+  lbl.textContent = '🎬 Loading DarkFlix…';
+  await sleep(700);
+
+  bar.style.width = '100%';
+  lbl.textContent = '✅ Ready!';
+  await sleep(350);
+
+  // Notify C++ shell
+  if (window.chrome?.webview) {
+    window.chrome.webview.postMessage({
+      type:        'DARKFLIX_AUTH_COMPLETE',
+      userId:      user.id    || user.userId,
+      displayName: user.displayName,
+      email:       user.email,
+      avatar:      user.avatar,
+    });
+  } else {
+    window.location.href = 'https://stremio.zarg.me/';
+  }
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+</script>
+</body>
+</html>
